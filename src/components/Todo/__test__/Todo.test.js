@@ -22,10 +22,45 @@ describe("Todo", () => {
       target: {
         value: "Go Grocery Shopping",
       },
-    }); 
+    });
     fireEvent.click(buttonElement);
-    const divElement = screen.getByText(/Go Grocery Shopping/i)
-    expect(divElement).toBeInTheDocument()
+    const divElement = screen.getByText(/Go Grocery Shopping/i);
+    expect(divElement).toBeInTheDocument();
+  });
+
+  const addTask = (tasks) => {
+    const inputElement = screen.getByPlaceholderText(/Add a new task here.../i);
+    const buttonElement = screen.getByRole("button", { name: /Add/i });
+    tasks.forEach((task) => {
+      fireEvent.change(inputElement, { target: { value: task } });
+      fireEvent.click(buttonElement);
+    });
+  };
+
+  it("should render multiple items", () => {
+    render(<MockTodo />);
+    addTask(["Go Grocery Shopping", "Pet my cat", "Wash my hands"]);
+    const divElement = screen.getAllByTestId("task-container");
+
+    expect(divElement.length).toBe(3);
+  });
+
+  //className not present in the todo item
+  it("should not have completed class when initially rendered", () => {
+    render(<MockTodo />);
+    addTask(["Go Grocery Shopping"]);
+    const divElement = screen.getByText(/Go Grocery Shopping/i);
+
+    expect(divElement).not.toHaveClass("todo-item-active");
+  });
+
+  //className should be present in the todo item
+  it("should have completed class when clicked", () => {
+    render(<MockTodo />);
+    addTask(["Go Grocery Shopping"]);
+    const divElement = screen.getByText(/Go Grocery Shopping/i);
+
+    expect(divElement).not.toHaveClass("todo-item-active");
   });
 });
 

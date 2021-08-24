@@ -10,7 +10,7 @@ function AddInput({ setTodos, todos }) {
     let updatedTodos = [
       ...todos,
       {
-        id: v4(),
+        id: v4(), 
         task: todo,
         completed: false,
       },
